@@ -1,10 +1,24 @@
 
 class Globals:
-    conf = None
-    conf_filename = "mDownloader.ini"
     log_filename = "mDownloader.log"
 
-class conf_keys:
-    rss = "RSS"
-    lastUpdateTime = "lastUpdateTime"
-    checkInterval = "checkInterval"
+
+class Conf_ini:
+    conf = None
+    conf_filename = "mDownloader.ini"
+
+    class Keys:
+        general = "General"
+        loggingLevel = "loggingLevel"
+        rss = "RSS"
+        lastUpdateTime = "lastUpdateTime"
+        checkInterval = "checkInterval"
+
+
+class Wish_json:
+    wishJsonMgr = None
+    wanted_filename = "wanted.json"
+
+    class Keys:
+        movies = "Movies"
+        name = "name"

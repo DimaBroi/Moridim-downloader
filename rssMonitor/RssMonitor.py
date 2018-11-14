@@ -1,30 +1,42 @@
 from datetime import datetime
 import feedparser
-from globals import Globals, conf_keys
+from globals import Conf_ini, Wish_json
 import logging
-import threading
-import time
+import re
 
 class RssMonitor:
     logger = logging.getLogger(__name__)
 
-    def __init__(self, rss_link, time_interval=10):
+    def __init__(self, rss_link):
         self.rss_link = rss_link
-        self.time_interval = time_interval
-        print(Globals.conf.get(conf_keys.rss, conf_keys.lastUpdateTime))
-        self.last_update_time = datetime.strptime(Globals.conf.get(conf_keys.rss, conf_keys.lastUpdateTime),
+        print(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.lastUpdateTime))
+        self.last_update_time = datetime.strptime(Conf_ini.conf.get(Conf_ini.Keys.rss,
+                                                                    Conf_ini.Keys.lastUpdateTime),
                                                   '%Y-%m-%d %H:%M:%S')
 
     def monitor(self):
-        print(time.ctime())
-        print (self.last_update_time)
         updates = feedparser.parse(self.rss_link)
+
+        # wishes_names = {Wish_json.Keys.movies : map((lambda wish: wish[Wish_json.Keys.name]),
+        #                                     Wish_json.wishes[Wish_json.Keys.movies])}
+
         for entry in updates['entries']:
             datetime_object = datetime.strptime(entry['published'].split('GMT')[0], '%a, %d %b %Y %H:%M:%S ')
             if self.last_update_time >= datetime_object:
                 break
-            print(str(datetime_object) + " - " + entry['title'].split('|')[1][1:])
+            name = entry['title'].split('|')[1][1:]
+            matching_regs = filter(lambda reg: re.match(reg, name),
+                                   Wish_json.wishJsonMgr.getKeys())
+            if len(matching_regs):
+                if 2 <= len(matching_regs):
+                    self.logger.error( name + " mathces " + str(len(matching_regs)) + "wanted items :" + str(matching_regs))
+                    #TODO: send msg to user to take action - for now wwe ignore such rear case.
+                print("downloading " + name)
+            else:
+                print("not downloading " + name)
+
 
         last_update_datetime_object = datetime.strptime(updates['entries'][0]['published'].split('GMT')[0], '%a, %d %b %Y %H:%M:%S ')
         if self.last_update_time < last_update_datetime_object:
             self.last_update_time = last_update_datetime_object
+
