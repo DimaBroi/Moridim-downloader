@@ -1,12 +1,10 @@
-import json
 import logging
-import time
-
+import configparser
 from globals import Conf_ini, Wish_json, Globals
-import ConfigParser
 from rssMonitor.RssMonitor import RssMonitor
 from utilities import call_repeatedly
 from wishJsonMgr import WishJsonMgr
+
 
 def main():
     load_config()
@@ -18,14 +16,14 @@ def main():
 
     monitor = RssMonitor("https://www.moridim.tv/rss")
     monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
-                          monitor.monitor)
+                                        monitor.monitor)
 
-    time.sleep(5)
+    #time.sleep(5)
     #monitor_stop_func()
-    time.sleep(15)
+    #time.sleep(15)
 
 def load_config():
-    Conf_ini.conf = ConfigParser.ConfigParser()
+    Conf_ini.conf = configparser.ConfigParser()
     read_ok = Conf_ini.conf.read(Conf_ini.conf_filename)
     if not read_ok:
         #TODO : throw exception
