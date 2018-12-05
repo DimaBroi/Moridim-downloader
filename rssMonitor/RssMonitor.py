@@ -51,5 +51,7 @@ class RssMonitor:
                     return li.a["href"]
 
         found = {k: get_download_link(v) for k, v in found.items()}
+        found = {k: v for k, v in found.items() if v is not None}
+
         print(found)
         downloadMgr(found).download()

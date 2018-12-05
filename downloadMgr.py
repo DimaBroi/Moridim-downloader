@@ -34,10 +34,10 @@ class downloadMgr:
             result = session_requests.get(url, headers = dict(referer=url))
             bsObj = BeautifulSoup(result.content, "html.parser")
             for li in bsObj.find_all("a",{"id":"download"}):
-                dest = "C:\\Downloads\\auto_movies\\"  # or '~/Downloads/' on linux
+                dest = "D:\\movies\\auto_movies\\"  # or '~/Downloads/' on linux
                 url = li['href']
-                obj = SmartDL(url, dest, progress_bar=True, logger=self.logger)
-                obj.start()
+                obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
+                obj.start(blocking=False)
 
         for name in self.list.keys():
             Wish_json.wishJsonMgr.removeMovieByName(name)
