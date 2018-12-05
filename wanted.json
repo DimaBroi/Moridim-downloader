@@ -1,8 +1,1 @@
-{
-    "Tell Me Your Name" : {"type": "movie", "quality": "0"},
-    "The Wife" : {"type": "movie", "quality": "0"},
-    "Searching" : {"type": "movie", "quality": "0"},
-    "Mission: Impossible - Fallout" : {"type": "movie", "quality": "0"}
-}
-
-
+{"Tell Me Your Name": {"type": "movie", "quality": []}, "The Wife": {"type": "movie", "quality": []}, "Searching": {"type": "movie", "quality": []}, "The Christmas Chronicles": {"type": "movie", "quality": ["WEBDL - 720p", "WEBDL - 1080p", "BluRay - 1080p", "BluRay - 720p"]}, "Blindspotting": {"type": "movie", "quality": ["WEBDL - 720p", "WEBDL - 1080p", "BluRay - 1080p", "BluRay - 720p"]}, "Destination Wedding": {"type": "movie", "quality": ["WEBDL - 720p", "WEBDL - 1080p", "BluRay - 1080p", "BluRay - 720p"]}}

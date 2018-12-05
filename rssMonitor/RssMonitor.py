@@ -4,6 +4,7 @@ import urllib
 import feedparser
 from bs4 import BeautifulSoup
 
+from downloadMgr import downloadMgr
 from globals import Conf_ini, Wish_json
 import logging
 from functools import reduce
@@ -25,18 +26,30 @@ class RssMonitor:
                            Wish_json.wishJsonMgr.getKeys()))
             if found_reg:
                 # We assume we have on match tops - may need to re-think
-                output[found_reg[0]] = encodeUrl(current['links'][1]['href'])
+                output[found_reg[0]] = encodeUrl(current['links'][1]['href']).replace("www.moridim.tv","www.moridim01.tv" )
             return output
 
         found = reduce(look_for_wanted, updates['entries'], {})
 
-        req = urllib.request.Request(encodeUrl(found[list(found.keys())[0]]), headers={'User-Agent': 'Mozilla/5.0'})
-        movie_page = urllib.request.urlopen(req).read()
-        bs_obj = BeautifulSoup(movie_page, "html.parser")
+        if not found:
+            self.logger.debug("No match found")
+            return
+        print(found)
 
-        for li in bs_obj.find_all("li", {"id": re.compile("release-")}):
-            print("==================")
-            print(li)
-            print("-------------------")
-            print(li.a)
-            print("==================")
+        def get_bs_object(page_link):
+            req = urllib.request.Request(page_link, headers={'User-Agent': 'Mozilla/5.0'})
+            movie_page = urllib.request.urlopen(req).read()
+            bs_obj = BeautifulSoup(movie_page, "html.parser")
+            return bs_obj
+
+        found = {k: get_bs_object(v) for k, v in found.items()}
+
+        def get_download_link(page_bs_obj):
+            for li in page_bs_obj.find_all("li", {"id": re.compile("release-")}):
+                quality = li.find_all("b")[1]
+                if quality.string in Wish_json.wishJsonMgr.getWantedQuality(list(found.keys())[0]):
+                    return li.a["href"]
+
+        found = {k: get_download_link(v) for k, v in found.items()}
+        print(found)
+        downloadMgr(found).download()
