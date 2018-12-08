@@ -30,6 +30,22 @@ class WishJsonMgr:
     def getKeys(self):
         return self.wishes.keys()
 
+    def getType(self, name):
+            return self.wishes[name]["type"]
+
+    def getSeason(self, name):
+            return self.wishes[name]["season"]
+
+    def getEpisode(self, name):
+            return self.wishes[name]["episode"]
+
+    def setNextSeason(self, name):
+        self.wishes[name]["season"] += 1
+        self.wishes[name]["episode"] = 1
+
+    def setNextEpisode(self, name):
+        self.wishes[name]["episode"] += 1
+
     def removeMovieByName(self, name):
         del self.wishes[name]
 

@@ -1,5 +1,7 @@
 
 class Globals:
+    moridim_main = "https://www.moridim.biz"
+    moridim_rss = moridim_main + "/rss"
     log_filename = "mDownloader.log"
 
 
@@ -20,5 +22,7 @@ class Wish_json:
     wanted_filename = "wanted.json"
 
     class Keys:
-        movies = "Movies"
+        type = "type"
+        series = "series"
+        movies = "movies"
         name = "name"

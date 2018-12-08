@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 from pySmartDL import SmartDL
 from globals import Wish_json
-from nitrobit_psw import nitrobit_psw
+from nitrobit_psw import NitrobitPsw
 
 
 class downloadMgr:
@@ -14,7 +14,7 @@ class downloadMgr:
     def __init__(self, download_list):
         self.list = download_list
 
-    def download(self):
+    def download(self, blocking=False):
         session_requests = requests.session()
 
         login_url = "https://www.nitrobit.net/login"
@@ -23,8 +23,8 @@ class downloadMgr:
         authenticity_token = list(set(tree.xpath("//input[@name='token']/@value")))[0]
         print(authenticity_token)
         payload = {
-            "email": nitrobit_psw.email,
-            "password": nitrobit_psw.psw,
+            "email": NitrobitPsw.email,
+            "password": NitrobitPsw.psw,
             "login": "",
             "token": authenticity_token
         }
@@ -37,11 +37,7 @@ class downloadMgr:
                 dest = "D:\\movies\\auto_movies\\"  # or '~/Downloads/' on linux
                 url = li['href']
                 obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
-                obj.start(blocking=False)
-
-        for name in self.list.keys():
-            Wish_json.wishJsonMgr.removeMovieByName(name)
-        Wish_json.wishJsonMgr.writeToFile()
+                obj.start(blocking)
 
         for name, link in self.list.items():
             __download_file__(link)

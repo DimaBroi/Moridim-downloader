@@ -22,10 +22,10 @@ def main():
 
 
 
-    monitor = RssMonitor("https://www.moridim01.tv/rss")
+    monitor = RssMonitor(Globals.moridim_rss)
     monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
                                         monitor.monitor)
-    monitor.monitor()
+    monitor.monitor
 
     #time.sleep(5)
     #monitor_stop_func()
