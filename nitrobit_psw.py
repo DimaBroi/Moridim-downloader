@@ -1,3 +1,5 @@
+import usr #remove
+
 class nitrobit_psw:
-    email = EMAIL
-    psw = PASSWORD
+    email=usr.email #fill you email
+    psw=usr.psw #fill you password

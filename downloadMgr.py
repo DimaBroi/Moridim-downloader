@@ -1,7 +1,7 @@
 from lxml import html
 import logging
 from bs4 import BeautifulSoup
-from pip._vendor import requests
+import requests
 from pySmartDL import SmartDL
 from globals import Wish_json
 from nitrobit_psw import nitrobit_psw
@@ -11,7 +11,7 @@ class downloadMgr:
     logger = logging.getLogger(__name__)
     list = None
 
-    def __init__(self,download_list):
+    def __init__(self, download_list):
         self.list = download_list
 
     def download(self):
