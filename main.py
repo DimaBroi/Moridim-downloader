@@ -45,29 +45,62 @@ def main():
     # Conf_ini.Keys.rss == the RSS feed name (??? Why is it under the convertion to float ???)
     # Conf_ini.Keys.checkInterval == the time between calls of the function
     # monitor.monitor is the function to run under the instance of rss monitor created earlier
-    # Pass the all thing to monitor_stop_func instance (??? for what ???)
+    # Pass the all thing to "monitor_stop_func" instance (??? for what ???)
     monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
                                         monitor.monitor)
     monitor.monitor # (??? why use this call, for what ???
 
+    # ??? Do we need all this ???
     #time.sleep(5)
     #monitor_stop_func()
     #time.sleep(15)
 
+
+
+#############################################
+# Definition of the load_config function    #
+#############################################
+
 def load_config():
+    # Create an instance of configuration parser as Conf_ini.conf
     Conf_ini.conf = configparser.ConfigParser()
+    # Check the configuration by reading it and insert the result to read_ok
     read_ok = Conf_ini.conf.read(Conf_ini.conf_filename)
+    # if the config file read didnt work then print "'config file name' wasn't fond"
+    # Needs to throw exceprion and write to the log file
     if not read_ok:
         #TODO : throw exception
         print(Globals.conf_filename + " wasn't found")
 
 
+
+#############################################
+# Definition of the init_logger function    #
+#############################################
+
 def init_logger():
+    # Set the basic configuration of to logger with the following parameters:
+    # filename: sourced from the globals file using the log_filename parameter
+    # level (the level of logging to show in the log):
+    #       Conf_ini.Keys.general is holding the section to read from the config file
+    #       Conf_ini.Keys.loggingLevel is holding the value to read
+    # format is used for formating the log line:
+    #       first is the time ascending
+    #       then the name of the log ("main")
+    #       then the level of the log ("debug")
+    #       finally the message itself
+    # datefmt is the format of the date to use
     logging.basicConfig(filename=Globals.log_filename,
                         level=logging.getLevelName(Conf_ini.conf.get(Conf_ini.Keys.general, Conf_ini.Keys.loggingLevel)),
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         datefmt='%d/%m/%y %H:%M:%S')
 
+
+
+
+###################################################################
+# Check if the file name is main, and if so run the main function #
+###################################################################
 
 if __name__ == '__main__':
     main()

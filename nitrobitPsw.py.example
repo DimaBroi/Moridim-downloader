@@ -1,3 +1,9 @@
+################################################
+# Define the class "NitrobitPsw" with keys:    #
+#       email: the usname / email for nitrobit #
+#       psw: the password for nitrobit         #
+################################################
+
 class NitrobitPsw:
     email=ENTER_YOUR_USER
     psw=ENTER_YOUR_PASSWORD
