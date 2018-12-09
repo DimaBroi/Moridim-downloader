@@ -3,8 +3,7 @@ import logging
 from bs4 import BeautifulSoup
 import requests
 from pySmartDL import SmartDL
-from globals import Wish_json
-from nitrobit_psw import NitrobitPsw
+from nitrobitPsw import NitrobitPsw
 
 
 class downloadMgr:

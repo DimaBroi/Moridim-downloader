@@ -1,0 +1,3 @@
+class NitrobitPsw:
+    email=ENTER_YOUR_USER
+    psw=ENTER_YOUR_PASSWORD
