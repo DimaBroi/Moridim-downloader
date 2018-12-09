@@ -2,6 +2,9 @@
 # Define the class "NitrobitPsw" with keys:    #
 #       email: the usname / email for nitrobit #
 #       psw: the password for nitrobit         #
+#                                              #
+# The parameters of this file is used in:      #
+#       downloadMgr.py                         #
 ################################################
 
 class NitrobitPsw:
