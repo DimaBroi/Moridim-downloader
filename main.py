@@ -1,3 +1,8 @@
+#####################################
+# Libraries Used in this file       #
+#####################################
+
+
 import logging
 import configparser
 import errno, sys
@@ -6,25 +11,27 @@ from rssMonitor.RssMonitor import RssMonitor
 from utilities import call_repeatedly
 from wishJsonMgr import WishJsonMgr
 
+#####################################
+# Definition of the main program    #
+#####################################
 
 def main():
 
+    # Error handling
     try:
-        load_config()
-        init_logger()
-        logger = logging.getLogger("main")
-        logger.debug("logger initialized")
-        Wish_json.wishJsonMgr = WishJsonMgr()
-        logger.debug("wish json loaded")
+        load_config() 
+        init_logger() 
+        logger = logging.getLogger("main") 
+        logger.debug("logger initialized") 
+        Wish_json.wishJsonMgr = WishJsonMgr() 
+        logger.debug("wish json loaded") 
     except Exception as e:
-        #logger.error(str(e))
-        sys.exit(errno.EPERM)
-
-
-
+        sys.exit(errno.EPERM) 
+        
     monitor = RssMonitor(Globals.moridim_rss)
     monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
                                         monitor.monitor())
+
 
     #time.sleep(5)
     #monitor_stop_func()
