@@ -18,7 +18,6 @@ class RssMonitor:
         self.rss_link = rss_link
         print(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.lastUpdateTime))
 
-    @property
     def monitor(self):
         updates = feedparser.parse(self.rss_link)
         # pars the RSS file:
@@ -30,10 +29,11 @@ class RssMonitor:
                 # We assume we have on match tops - may need to re-think
                 if Wish_json.wishJsonMgr.getType(found_reg[0]) == Wish_json.Keys.series:
                     # if we are looking on series we need to check the wanted season and episode
-                    if re.match(".*S{:02}E{:02}".format(Wish_json.wishJsonMgr.getSeason(found_reg[0]),
+                    if not re.match(".*S{:02}E{:02}".format(Wish_json.wishJsonMgr.getSeason(found_reg[0]),
                                                       Wish_json.wishJsonMgr.getEpisode(found_reg[0])),
                                 current['title'].split('|')[1].strip()):
-                        output[found_reg[0]] = encodeUrl(current['links'][1]['href'])
+                                    return output
+                output[found_reg[0]] = encodeUrl(current['links'][1]['href'])
             return output
 
         found = reduce(look_for_wanted, updates['entries'], {})
