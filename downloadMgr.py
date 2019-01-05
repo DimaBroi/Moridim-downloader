@@ -28,7 +28,7 @@ class downloadMgr:
             "login": "",
             "token": authenticity_token
         }
-        rc = session_requests.post(login_url, data=payload)
+        session_requests.post(login_url, data=payload)
 
         def __download_file__(name, url):
             result = session_requests.get(url, headers = dict(referer=url))
