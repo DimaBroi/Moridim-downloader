@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 from pySmartDL import SmartDL
 from nitrobitPsw import NitrobitPsw
+from globals import Conf_ini
 
 
 class downloadMgr:
@@ -27,19 +28,23 @@ class downloadMgr:
             "login": "",
             "token": authenticity_token
         }
-        session_requests.post(login_url, data=payload)
+        rc = session_requests.post(login_url, data=payload)
 
-        def __download_file__(url):
+        def __download_file__(name, url):
             result = session_requests.get(url, headers = dict(referer=url))
             bsObj = BeautifulSoup(result.content, "html.parser")
-            for li in bsObj.find_all("a",{"id":"download"}):
-                dest = "D:\\movies\\auto_movies\\"  # or '~/Downloads/' on linux
-                url = li['href']
-                obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
-                obj.start(blocking)
+            li_list = bsObj.find_all("a",{"id":"download"})
+            if li_list:
+                for li in li_list:
+                    dest = Conf_ini.conf.get(Conf_ini.Keys.download, Conf_ini.Keys.downloadPath)
+                    url = li['href']
+                    obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
+                    obj.start(blocking)
+            else:
+                logging.error("No download link for " + name + "were found, please check that your user name and password are correct, and make sure you subscription is still valid")
 
         for name, link in self.list.items():
-            __download_file__(link)
+            __download_file__(name, link)
 
 if __name__ == '__main__':
     downloadMgr({}).download()

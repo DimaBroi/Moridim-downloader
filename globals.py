@@ -15,7 +15,8 @@ class Conf_ini:
         rss = "RSS"
         lastUpdateTime = "lastUpdateTime"
         checkInterval = "checkInterval"
-
+        download = "DOWNLOAD"
+        downloadPath = "path"
 
 class Wish_json:
     wishJsonMgr = None
