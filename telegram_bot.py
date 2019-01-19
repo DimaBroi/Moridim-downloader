@@ -16,15 +16,16 @@ bot.
 """
 
 from telegram import ReplyKeyboardMarkup
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
+from telegram.ext import (Updater, CommandHandler, RegexHandler,
                           ConversationHandler)
-
+from imdb import IMDb
+import re
 import logging
-
+movies = None
 logger = logging.getLogger(__name__)
 
-CHOOSE_TYPE = range(1)
-
+CHOOSE_MOVIE = range(1)
+imdb = IMDb()
 
 def facts_to_str(user_data):
     facts = list()
@@ -36,22 +37,20 @@ def facts_to_str(user_data):
 
 
 def start(bot, update):
-    reply_keyboard = [['Series', 'Movie']]
 
     update.message.reply_text(
-        "Hi! I am your bot for Moridim site.\nWhat would you like to add to monitoring?",
-        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
-
-    return CHOOSE_TYPE
+        "Hi! I am your bot for Moridim site.\nWhat would you like to download?")
+    return CHOOSE_MOVIE
 
 
 def movie_choice(bot, update, user_data):
-    text = update.message.text
-    user_data['type'] = text
-    update.message.reply_text(
-        'What movie would you like to download?')
-
-    return ConversationHandler.END
+    reply_keyboard = [['Yep', 'No, show next']]
+    print(update.message.text)
+    movies = imdb.search_movie(update.message.text)
+    imdb.update(movies[0], "main")
+    update.message.reply_photo(re.sub(r"@\..*", "@._V1_UY536_CR1,0,364,536_AL_.jpg", movies[0]['cover url']),
+                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return CHOOSE_MOVIE
 
 
 def series_choice(bot, update, user_data):
@@ -112,11 +111,11 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            CHOOSE_TYPE: [RegexHandler('^Movie$',
+            CHOOSE_MOVIE: [RegexHandler('.*',
                                        movie_choice,
                                        pass_user_data=True),
                        RegexHandler('^Series$',
-                                    series_choice,
+                                    movie_choice,
                                     pass_user_data=True),
                        ],
             #

@@ -28,9 +28,9 @@ def main():
     except Exception as e:
         sys.exit(errno.EPERM) 
         
-    monitor = RssMonitor(Globals.moridim_rss)
-    monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
-                                        monitor.monitor())
+    RssMonitor(Globals.moridim_rss).monitor()
+    #monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
+    #                                   monitor.monitor())
 
 
     #time.sleep(5)

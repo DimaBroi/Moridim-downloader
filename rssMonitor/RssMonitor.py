@@ -76,7 +76,7 @@ class RssMonitor:
         if not bool(found):
             return
 
-        downloadMgr(found).download(False)
+        downloadMgr(found).download(True)
 
         for name in found.keys():
             if Wish_json.wishJsonMgr.getType(name) == Wish_json.Keys.movies:
