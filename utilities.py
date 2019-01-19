@@ -10,10 +10,10 @@ def encodeUrl(url):
     return url
 
 
-def call_repeatedly(interval, func, *args):
-    stopped = Event()
-    def loop():
-        while not stopped.wait(interval): # the first call is in `interval` secs
-            func(*args)
-    Thread(target=loop).start()
-    return stopped.set
+# def call_repeatedly(interval, func, *args):
+#     stopped = Event()
+#     def loop():
+#         while not stopped.wait(interval): # the first call is in `interval` secs
+#             func(*args)
+#     Thread(target=loop).start()
+#     return stopped.set

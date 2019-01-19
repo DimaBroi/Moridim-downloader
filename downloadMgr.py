@@ -36,7 +36,7 @@ class downloadMgr:
             li_list = bsObj.find_all("a",{"id":"download"})
             if li_list:
                 for li in li_list:
-                    dest = Conf_ini.conf.get(Conf_ini.Keys.download, Conf_ini.Keys.downloadPath)+"\\"+name+"\\"
+                    dest = Conf_ini.conf.get(Conf_ini.Keys.download, Conf_ini.Keys.downloadPath)+"\\"+name+"\\" #TODO: add support for Linux
                     url = li['href']
                     obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
                     obj.start(blocking)
