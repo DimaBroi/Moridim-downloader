@@ -26,6 +26,7 @@ class RssMonitor:
                                     re.match(reg, current['title'].split('|')[1].strip(), re.IGNORECASE),
                                     Wish_json.wishJsonMgr.getKeys()))
 
+
             if found_reg:
                 # We assume we have on match tops - may need to re-think
                 if Wish_json.wishJsonMgr.getType(found_reg[0]) == Wish_json.Keys.series:
