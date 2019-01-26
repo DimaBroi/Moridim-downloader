@@ -22,7 +22,8 @@ class RssMonitor:
         updates = feedparser.parse(self.rss_link)
         # pars the RSS file:
         def look_for_wanted(output, current):
-            found_reg = list(filter(lambda reg: re.match(reg, current['title'].split('|')[1].strip()),
+            found_reg = list(filter(lambda reg:
+                                    re.match(reg, current['title'].split('|')[1].strip(), re.IGNORECASE),
                                     Wish_json.wishJsonMgr.getKeys()))
 
             if found_reg:
@@ -79,7 +80,7 @@ class RssMonitor:
         downloadMgr(found).download(True)
 
         for name in found.keys():
-            if Wish_json.wishJsonMgr.getType(name) == Wish_json.Keys.movies:
+            if Wish_json.wishJsonMgr.getType(name) == Wish_json.Keys.movie:
                 Wish_json.wishJsonMgr.removeMovieByName(name)
 
             elif Wish_json.wishJsonMgr.getType(name) == Wish_json.Keys.series:

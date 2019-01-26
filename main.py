@@ -8,7 +8,6 @@ import configparser
 import errno, sys
 from globals import Conf_ini, Wish_json, Globals
 from rssMonitor.RssMonitor import RssMonitor
-from utilities import call_repeatedly
 from wishJsonMgr import WishJsonMgr
 
 #####################################

@@ -25,5 +25,5 @@ class Wish_json:
     class Keys:
         type = "type"
         series = "series"
-        movies = "movies"
+        movie = "movie"
         name = "name"

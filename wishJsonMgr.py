@@ -54,7 +54,8 @@ class WishJsonMgr:
 
     def writeToFile(self):
         with open(Wish_json.wanted_filename, 'w') as jsonFile:
-            json.dump(self.wishes, jsonFile)
+            jsonFile.write(json.dumps(self.wishes, sort_keys=True, indent=4))
+
 
 
 if __name__ == '__main__':
