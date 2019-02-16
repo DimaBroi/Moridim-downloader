@@ -55,7 +55,7 @@ def series_choice(bot, update, user_data):
     splitted_text = " ".join(update.message.text.split()).split(' ')
     season, episode = splitted_text[-2:]
     name = " ".join(splitted_text[1:-2])
-    WishJsonMgr().addSeries(name, season[1:], episode[1:]).writeToFile()
+    WishJsonMgr().addSeries(name, int(season[1:]), int(episode[1:])).writeToFile()
     update.message.reply_text(
         name.upper() + ' starting ' + season.upper() + ' ' + episode.upper() + ' added to monitor', quote=True)
     return ADD_MEDIA
