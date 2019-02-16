@@ -19,12 +19,13 @@ from telegram import ReplyKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, RegexHandler,
                           ConversationHandler)
 from imdb import IMDb
-import re
 import logging
+
+from wishJsonMgr import WishJsonMgr
+
 movies = None
 logger = logging.getLogger(__name__)
-
-CHOOSE_MOVIE = range(1)
+ADD_MEDIA = range(1)
 imdb = IMDb()
 
 def facts_to_str(user_data):
@@ -37,49 +38,28 @@ def facts_to_str(user_data):
 
 
 def start(bot, update):
-
     update.message.reply_text(
         "Hi! I am your bot for Moridim site.\nWhat would you like to download?")
-    return CHOOSE_MOVIE
+    return ADD_MEDIA
 
 
 def movie_choice(bot, update, user_data):
-    reply_keyboard = [['Yep', 'No, show next']]
-    print(update.message.text)
-    movies = imdb.search_movie(update.message.text)
-    imdb.update(movies[0], "main")
-    update.message.reply_photo(re.sub(r"@\..*", "@._V1_UY536_CR1,0,364,536_AL_.jpg", movies[0]['cover url']),
-                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
-    return CHOOSE_MOVIE
+    text = update.message.text.split(' ', 1)[1]
+    WishJsonMgr().addMovie(text).writeToFile()
+    update.message.reply_text(
+        'Movie ' + text + ' added to monitor')
+
+    return ADD_MEDIA
 
 
 def series_choice(bot, update, user_data):
-    text = update.message.text
-    user_data['type'] = text
+    splitted_text = " ".join(update.message.text.split()).split(' ')
+    season, episode = splitted_text[-2:]
+    name = " ".join(splitted_text[1:-2])
+    WishJsonMgr().addSeries(name, season[1:], episode[1:]).writeToFile()
     update.message.reply_text(
-        'What series would you like to download?')
-
-    return ConversationHandler.END
-
-# def custom_choice(bot, update):
-#     update.message.reply_text('Alright, please send me the category first, '
-#                               'for example "Most impressive skill"')
-#
-#     return TYPING_CHOICE
-
-#
-# def received_information(bot, update, user_data):
-#     text = update.message.text
-#     category = user_data['choice']
-#     user_data[category] = text
-#     del user_data['choice']
-#
-#     update.message.reply_text("Neat! Just so you know, this is what you already told me:"
-#                               "{}"
-#                               "You can tell me more, or change your opinion on something.".format(
-#                                   facts_to_str(user_data)), reply_markup=markup)
-#
-#     return CHOOSING
+        name + ' starting ' + season.upper() + ' ' + episode.upper() + 'added to monitor')
+    return ADD_MEDIA
 
 
 def done(bot, update, user_data):
@@ -111,13 +91,13 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            CHOOSE_MOVIE: [RegexHandler('.*',
-                                       movie_choice,
-                                       pass_user_data=True),
-                       RegexHandler('^Series$',
-                                    movie_choice,
-                                    pass_user_data=True),
-                       ],
+            ADD_MEDIA: [RegexHandler('^\s*[m|M|movie|Movie].*$',
+                                     movie_choice,
+                                     pass_user_data=True),
+                        RegexHandler('^\s*[s|S|series|Series]\s+.*\s+[s|S]\d+\s+[e|E]\d+.*$',
+                                     series_choice,
+                                     pass_user_data=True),
+                        ],
             #
             # TYPING_CHOICE: [MessageHandler(Filters.text,
             #                                regular_choice,
