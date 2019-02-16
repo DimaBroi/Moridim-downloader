@@ -1,0 +1,2 @@
+class TelegramToken:
+    token=ENTER_YOUR_TOKEN

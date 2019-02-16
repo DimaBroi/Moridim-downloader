@@ -15,15 +15,14 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
-from telegram import ReplyKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, RegexHandler,
                           ConversationHandler)
 from imdb import IMDb
 import logging
 
+from telegramToken import TelegramToken
 from wishJsonMgr import WishJsonMgr
 
-movies = None
 logger = logging.getLogger(__name__)
 ADD_MEDIA = range(1)
 imdb = IMDb()
@@ -47,7 +46,7 @@ def movie_choice(bot, update, user_data):
     text = update.message.text.split(' ', 1)[1]
     WishJsonMgr().addMovie(text).writeToFile()
     update.message.reply_text(
-        'Movie ' + text + ' added to monitor')
+        'Movie ' + text.upper + ' added to monitor', quote=True)
 
     return ADD_MEDIA
 
@@ -58,7 +57,7 @@ def series_choice(bot, update, user_data):
     name = " ".join(splitted_text[1:-2])
     WishJsonMgr().addSeries(name, season[1:], episode[1:]).writeToFile()
     update.message.reply_text(
-        name + ' starting ' + season.upper() + ' ' + episode.upper() + 'added to monitor')
+        name.upper() + ' starting ' + season.upper() + ' ' + episode.upper() + ' added to monitor', quote=True)
     return ADD_MEDIA
 
 
@@ -81,7 +80,7 @@ def error(bot, update, error):
 
 def main():
     # Create the Updater and pass it your bot's token.
-    updater = Updater(token='705834706:AAG2Dmhr8s3riNGj6xVFBx3TT_636BilEOE')#TODO: add to config file
+    updater = Updater(token=TelegramToken.token)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -98,16 +97,6 @@ def main():
                                      series_choice,
                                      pass_user_data=True),
                         ],
-            #
-            # TYPING_CHOICE: [MessageHandler(Filters.text,
-            #                                regular_choice,
-            #                                pass_user_data=True),
-            #                 ],
-            #
-            # TYPING_REPLY: [MessageHandler(Filters.text,
-            #                               received_information,
-            #                               pass_user_data=True),
-            #                ],
         },
 
         fallbacks=[RegexHandler('^Done$', done, pass_user_data=True)]
