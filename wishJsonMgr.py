@@ -19,7 +19,6 @@ class WishJsonMgr:
 
             with open(Wish_json.wanted_filename) as jsonFile:
                 self.wishes = json.load(jsonFile)
-
         except JSONDecodeError as jSONDecodeError:
             self.logger.error("JSONDecodeError was raised for " + Wish_json.wanted_filename + " with msg \"" + str(jSONDecodeError)+"\"")
             raise Exception(Wish_json.wanted_filename + " decoding failed")
@@ -54,7 +53,24 @@ class WishJsonMgr:
 
     def writeToFile(self):
         with open(Wish_json.wanted_filename, 'w') as jsonFile:
-            json.dump(self.wishes, jsonFile)
+            jsonFile.write(json.dumps(self.wishes, sort_keys=True, indent=4))
+
+    def addMovie(self, name):
+        self.wishes[name] = {}
+        self.wishes[name]["quality"] = ["WEBDL - 720p", "WEBDL - 1080p", "BluRay - 1080p", "BluRay - 720p", "HD - 720p"]
+        self.wishes[name]["type"] = "movie"
+        self.writeToFile()
+        return self
+
+    def addSeries(self, name, season, episode):
+        self.wishes[name] = {}
+        self.wishes[name]["quality"] = ["WEBDL - 720p", "WEBDL - 1080p", "BluRay - 1080p", "BluRay - 720p", "HD - 720p"]
+        self.wishes[name]["type"] = "series"
+        self.wishes[name]["season"] = season
+        self.wishes[name]["episode"] = episode
+        self.writeToFile()
+        return self
+
 
 
 if __name__ == '__main__':

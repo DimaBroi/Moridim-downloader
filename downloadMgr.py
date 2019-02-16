@@ -28,15 +28,15 @@ class downloadMgr:
             "login": "",
             "token": authenticity_token
         }
-        rc = session_requests.post(login_url, data=payload)
+        session_requests.post(login_url, data=payload)
 
         def __download_file__(name, url):
-            result = session_requests.get(url, headers = dict(referer=url))
+            result = session_requests.get(url, headers=dict(referer=url))
             bsObj = BeautifulSoup(result.content, "html.parser")
-            li_list = bsObj.find_all("a",{"id":"download"})
+            li_list = bsObj.find_all("a", {"id": "download"})
             if li_list:
                 for li in li_list:
-                    dest = Conf_ini.conf.get(Conf_ini.Keys.download, Conf_ini.Keys.downloadPath)
+                    dest = Conf_ini.conf.get(Conf_ini.Keys.download, Conf_ini.Keys.downloadPath)+"\\"+name+"\\" #TODO: add support for Linux
                     url = li['href']
                     obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
                     obj.start(blocking)

@@ -8,7 +8,6 @@ import configparser
 import errno, sys
 from globals import Conf_ini, Wish_json, Globals
 from rssMonitor.RssMonitor import RssMonitor
-from utilities import call_repeatedly
 from wishJsonMgr import WishJsonMgr
 
 #####################################
@@ -28,14 +27,7 @@ def main():
     except Exception as e:
         sys.exit(errno.EPERM) 
         
-    monitor = RssMonitor(Globals.moridim_rss)
-    monitor_stop_func = call_repeatedly(float(Conf_ini.conf.get(Conf_ini.Keys.rss, Conf_ini.Keys.checkInterval)),
-                                        monitor.monitor())
-
-
-    #time.sleep(5)
-    #monitor_stop_func()
-    #time.sleep(15)
+    RssMonitor(Globals.moridim_rss).monitor()
 
 def load_config():
     Conf_ini.conf = configparser.ConfigParser()
