@@ -5,6 +5,8 @@ import requests
 from pySmartDL import SmartDL
 from nitrobitPsw import NitrobitPsw
 from globals import Conf_ini
+from telegramToken import TelegramToken
+import telegram
 
 
 class downloadMgr:
@@ -40,6 +42,7 @@ class downloadMgr:
                     url = li['href']
                     obj = SmartDL(url, dest, progress_bar=False, logger=self.logger)
                     obj.start(blocking)
+                    telegram.Bot(TelegramToken.token).sendMessage(chat_id=433591874, text= 'Just finished downloading **' + name + '**')
             else:
                 logging.error("No download link for " + name + "were found, please check that your user name and password are correct, and make sure you subscription is still valid")
 
