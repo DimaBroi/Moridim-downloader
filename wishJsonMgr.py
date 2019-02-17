@@ -27,7 +27,7 @@ class WishJsonMgr:
         print(json.dumps(self.wishes, indent=2, sort_keys=True))
 
     def getKeys(self):
-        return self.wishes.keys()
+        return list(self.wishes.keys())
 
     def getType(self, name):
             return self.wishes[name]["type"]
@@ -50,6 +50,9 @@ class WishJsonMgr:
 
     def getWantedQuality(self, name):
         return self.wishes[name]["quality"]
+
+    def isExist(self, name):
+        return name.upper() in [u.upper() for u in self.wishes.keys()]
 
     def writeToFile(self):
         with open(Wish_json.wanted_filename, 'w') as jsonFile:

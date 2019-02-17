@@ -1,6 +1,6 @@
 {
-    "Gotham": {
-        "episode": 4,
+    "American Gods": {
+        "episode": 1,
         "quality": [
             "WEBDL - 720p",
             "WEBDL - 1080p",
@@ -8,7 +8,82 @@
             "BluRay - 720p",
             "HD - 720p"
         ],
-        "season": 5,
+        "season": 2,
         "type": "series"
+    },
+    "Cold Pursuit": {
+        "quality": [
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "HD - 720p",
+            "BluRay - 720p"
+        ],
+        "type": "movie"
+    },
+    "Escape Room": {
+        "quality": [
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "BluRay - 720p"
+        ],
+        "type": "movie"
+    },
+    "Glass": {
+        "quality": [
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "HD - 720p",
+            "BluRay - 720p"
+        ],
+        "type": "movie"
+    },
+    "I Am the Night": {
+        "episode": 1,
+        "quality": [
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "BluRay - 720p",
+            "HD - 720p"
+        ],
+        "season": 1,
+        "type": "series"
+    },
+    "The Blacklist": {
+        "episode": 8,
+        "quality": [
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "BluRay - 720p",
+            "HD - 720p"
+        ],
+        "season": 6,
+        "type": "series"
+    },
+    "The Gifted": {
+        "episode": 15,
+        "quality": [
+            "HD - 720p",
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "BluRay - 720p"
+        ],
+        "season": 2,
+        "type": "series"
+    },
+    "The Upside": {
+        "quality": [
+            "WEBDL - 720p",
+            "WEBDL - 1080p",
+            "BluRay - 1080p",
+            "HD - 720p",
+            "BluRay - 720p"
+        ],
+        "type": "movie"
     }
 }

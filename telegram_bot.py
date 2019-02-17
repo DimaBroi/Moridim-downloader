@@ -20,6 +20,7 @@ from telegram.ext import (Updater, CommandHandler, RegexHandler,
 from imdb import IMDb
 import logging
 
+from globals import Wish_json
 from telegramToken import TelegramToken
 from wishJsonMgr import WishJsonMgr
 
@@ -43,23 +44,49 @@ def start(bot, update):
 
 
 def movie_choice(bot, update, user_data):
-    text = update.message.text.split(' ', 1)[1]
-    WishJsonMgr().addMovie(text).writeToFile()
-    update.message.reply_text(
-        'Movie ' + text.upper + ' added to monitor', quote=True)
 
+    name = update.message.text.split(' ', 1)[1]
+
+    if WishJsonMgr().isExist(name):
+        return_msg = 'Movie ' + name.upper() + ' already in you wish list'
+    else:
+        WishJsonMgr().addMovie(name).writeToFile()
+        return_msg = 'Movie ' + name.upper() + ' added to monitor'
+
+    update.message.reply_text(return_msg, quote=True)
     return ADD_MEDIA
 
 
 def series_choice(bot, update, user_data):
-    splitted_text = " ".join(update.message.text.split()).split(' ')
-    season, episode = splitted_text[-2:]
-    name = " ".join(splitted_text[1:-2])
-    WishJsonMgr().addSeries(name, int(season[1:]), int(episode[1:])).writeToFile()
-    update.message.reply_text(
-        name.upper() + ' starting ' + season.upper() + ' ' + episode.upper() + ' added to monitor', quote=True)
+    try:
+        splitted_text = " ".join(update.message.text.split()).split(' ')
+        season, episode = splitted_text[-2:]
+        name = " ".join(splitted_text[1:-2])
+
+        if WishJsonMgr().isExist(name):
+            return_msg = name.upper() + 'already in you wish list'
+        else:
+            return_msg = name.upper() + ' starting ' + season.upper() + ' ' + episode.upper() + ' added to monitor'
+            WishJsonMgr().addSeries(name, int(season[1:]), int(episode[1:])).writeToFile()
+
+    except:
+        return_msg = "Your series add request wasn't in the correct format"
+
+    update.message.reply_text(return_msg, quote=True)
     return ADD_MEDIA
 
+def list_choice(bot, update, user_data):
+    wishJsonMgr = WishJsonMgr()
+    media_names = wishJsonMgr.getKeys()
+
+    def add_season_episode(name):
+        if Wish_json.Keys.series == wishJsonMgr.getType(name):
+            name += " S"+str(wishJsonMgr.getSeason(name)).zfill(2) + " E" + str(wishJsonMgr.getEpisode(name)).zfill(2)
+        return name
+
+    media_names = list(map(add_season_episode, media_names))
+    return_list ='\n'.join([str(n)+". " + name for n, name in zip(list(range(len(media_names))), media_names)])
+    update.message.reply_text(return_list)
 
 def done(bot, update, user_data):
     if 'choice' in user_data:
@@ -95,6 +122,9 @@ def main():
                                      pass_user_data=True),
                         RegexHandler('^\s*[s|S|series|Series]\s+.*\s+[s|S]\d+\s+[e|E]\d+.*$',
                                      series_choice,
+                                     pass_user_data=True),
+                        RegexHandler('^\s*[l|L|list|List].*$',
+                                     list_choice,
                                      pass_user_data=True),
                         ],
         },
