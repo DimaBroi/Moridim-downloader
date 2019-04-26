@@ -45,7 +45,7 @@ def start(bot, update):
 
 def movie_choice(bot, update, user_data):
 
-    name = update.message.text.split(' ', 1)[1]
+    name = update.message.text.split(' ', 1)[1].lower().capitalize()
 
     if WishJsonMgr().isExist(name):
         return_msg = 'Movie ' + name.upper() + ' already in you wish list'
@@ -61,7 +61,7 @@ def series_choice(bot, update, user_data):
     try:
         splitted_text = " ".join(update.message.text.split()).split(' ')
         season, episode = splitted_text[-2:]
-        name = " ".join(splitted_text[1:-2])
+        name = " ".join(splitted_text[1:-2]).lower().capitalize()
 
         if WishJsonMgr().isExist(name):
             return_msg = name.upper() + 'already in you wish list'
@@ -75,6 +75,17 @@ def series_choice(bot, update, user_data):
     update.message.reply_text(return_msg, quote=True)
     return ADD_MEDIA
 
+def remove_choice(bot, update, user_data):
+    name = " ".join(update.message.text.split()).split(' ',1)[1].lower().capitalize()
+    wishMgr = WishJsonMgr().removeMovieByName(name)
+
+    if wishMgr:
+        wishMgr.writeToFile()
+        return_msg = name + " was removed from wish list"
+    update.message.reply_text(return_msg, quote=True)
+    return ADD_MEDIA
+
+
 def list_choice(bot, update, user_data):
     wishJsonMgr = WishJsonMgr()
     media_names = wishJsonMgr.getKeys()
@@ -87,6 +98,7 @@ def list_choice(bot, update, user_data):
     media_names = list(map(add_season_episode, media_names))
     return_list ='\n'.join([str(n)+". " + name for n, name in zip(list(range(len(media_names))), media_names)])
     update.message.reply_text(return_list)
+
 
 def done(bot, update, user_data):
     if 'choice' in user_data:
@@ -126,6 +138,9 @@ def main():
                         RegexHandler('^\s*[l|L|list|List].*$',
                                      list_choice,
                                      pass_user_data=True),
+                        RegexHandler('^\s*[r|R|d|D|Remove|remove|Delete|delete].*$',
+                                     remove_choice,
+                                     pass_user_data=True),
                         ],
         },
 
@@ -142,7 +157,7 @@ def main():
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
+    # start_polling() is non-blocking and will stop the botgracefully.
     updater.idle()
 
 

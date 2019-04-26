@@ -46,7 +46,10 @@ class WishJsonMgr:
         self.wishes[name]["episode"] += 1
 
     def removeMovieByName(self, name):
+        if not self.isExist(name):
+            return None
         del self.wishes[name]
+        return self
 
     def getWantedQuality(self, name):
         return self.wishes[name]["quality"]
