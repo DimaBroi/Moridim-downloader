@@ -17,7 +17,6 @@ bot.
 
 from telegram.ext import (Updater, CommandHandler, RegexHandler,
                           ConversationHandler)
-from imdb import IMDb
 import logging
 
 from globals import Wish_json
@@ -26,7 +25,7 @@ from wishJsonMgr import WishJsonMgr
 
 logger = logging.getLogger(__name__)
 ADD_MEDIA = range(1)
-imdb = IMDb()
+
 
 def facts_to_str(user_data):
     facts = list()
