@@ -19,9 +19,7 @@ class downloadMgr:
 
     def __init__(self, download_list):
         self.list = download_list
-		
-   
-		
+
     def download(self, blocking=False):
         session_requests = requests.session()
 
@@ -41,18 +39,18 @@ class downloadMgr:
         def __download_file__(name, url):
             def uploadToDrive(path):
                 gauth = GoogleAuth()
-		    # Try to load saved client credentials
+            # Try to load saved client credentials
                 gauth.LoadCredentialsFile("C:\\Progs\\Moridim.tv-downloader\\mycredsdrive.txt")
                 if gauth.credentials is None:
-			# Authenticate if they're not there
+            # Authenticate if they're not there
                     gauth.LocalWebserverAuth()
                 elif gauth.access_token_expired:
-			# Refresh them if expired
+            # Refresh them if expired
                     gauth.Refresh()
                 else:
-			        # Initialize the saved creds
+            # Initialize the saved creds
                     gauth.Authorize()
-			    #Save the current credentials to a file
+                #Save the current credentials to a file
                 gauth.SaveCredentialsFile("C:\\Progs\\Moridim.tv-downloader\\mycredsdrive.txt")
                 drive = GoogleDrive(gauth)
                 file = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": '1e4dwqUVtAroKJui9tR3DwO2QadV82Wrf'}]})
@@ -77,13 +75,12 @@ class downloadMgr:
                     uploadToDrive(obj.get_dest())
                     telegram.Bot(TelegramToken.token).sendMessage(chat_id=433591874, text= 'Just finished uploaded **' + name + '** to Drive')
             else:
-                logging.error("No download link for " + name + "were found, please check that your user name and password are correct, and make sure you subscription is still valid")
+                logging.error("No download link for " + name + "were found, please check that your user name and "
+                                                               "password are correct, and make sure you subscription is still valid")
 
         for name, link in self.list.items():
             __download_file__(name, link)
-			
-   
-		
-		
+
+
 if __name__ == '__main__':
     downloadMgr({}).download()
