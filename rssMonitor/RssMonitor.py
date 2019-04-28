@@ -36,7 +36,6 @@ class RssMonitor:
                                 current['title'].split('|')[1].strip()):
                                     return output
                 output[found_reg[0]] = encodeUrl(current['links'][1]['href'].replace('.biz','.co'))#====>>>downloadWA for .biz moved to .co
-                output[found_reg[0]] = encodeUrl(current['links'][1]['href'].replace('.biz','.co'))#====>>>WA for .biz moved to .co
             return output
 
         found = reduce(look_for_wanted, updates['entries'], {})
