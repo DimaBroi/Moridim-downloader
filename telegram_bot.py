@@ -15,9 +15,8 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
-from telegram.ext import (Updater, CommandHandler, RegexHandler,
-                          ConversationHandler)
-from imdb import IMDb
+from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
+                          ConversationHandler, PicklePersistence)
 import logging
 
 from globals import Wish_json
@@ -26,27 +25,16 @@ from wishJsonMgr import WishJsonMgr
 
 logger = logging.getLogger(__name__)
 ADD_MEDIA = range(1)
-imdb = IMDb()
 
-def facts_to_str(user_data):
-    facts = list()
-
-    for key, value in user_data.items():
-        facts.append('{} - {}'.format(key, value))
-
-    return "\n".join(facts).join(['\n', '\n'])
-
-
-def start(bot, update):
+def start(update, contex):
     update.message.reply_text(
         "Hi! I am your bot for Moridim site.\nWhat would you like to download?")
     return ADD_MEDIA
 
 
-def movie_choice(bot, update, user_data):
+def movie_choice( update, contex):
 
     name = update.message.text.split(' ', 1)[1]
-
     if WishJsonMgr().isExist(name):
         return_msg = 'Movie ' + name.upper() + ' already in you wish list'
     else:
@@ -57,7 +45,7 @@ def movie_choice(bot, update, user_data):
     return ADD_MEDIA
 
 
-def series_choice(bot, update, user_data):
+def series_choice( update, contex):
     try:
         splitted_text = " ".join(update.message.text.split()).split(' ')
         season, episode = splitted_text[-2:]
@@ -75,7 +63,8 @@ def series_choice(bot, update, user_data):
     update.message.reply_text(return_msg, quote=True)
     return ADD_MEDIA
 
-def list_choice(bot, update, user_data):
+def list_choice( update, contex):
+    
     wishJsonMgr = WishJsonMgr()
     media_names = wishJsonMgr.getKeys()
 
@@ -88,55 +77,51 @@ def list_choice(bot, update, user_data):
     return_list ='\n'.join([str(n)+". " + name for n, name in zip(list(range(len(media_names))), media_names)])
     update.message.reply_text(return_list)
 
-def done(bot, update, user_data):
+def done( update, contex):
     if 'choice' in user_data:
         del user_data['choice']
 
-    update.message.reply_text("I learned these facts about you:"
-                              "{}"
-                              "Until next time!".format(facts_to_str(user_data)))
-
-    user_data.clear()
+    update.message.reply_text("Done adding ! ")
     return ConversationHandler.END
 
 
-def error(bot, update, error):
+def error( update, contex):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
 def main():
     # Create the Updater and pass it your bot's token.
-    updater = Updater(token=TelegramToken.token)
+    updater = Updater(token=TelegramToken.token, use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
-
+    
     # Add conversation handler with the states CHOOSING, TYPING_CHOICE and TYPING_REPLY
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
 
         states={
-            ADD_MEDIA: [RegexHandler('^\s*[m|M|movie|Movie].*$',
+            ADD_MEDIA: [MessageHandler(Filters.regex(r'^\s*[m|M|movie|Movie].*$'),
                                      movie_choice,
                                      pass_user_data=True),
-                        RegexHandler('^\s*[s|S|series|Series]\s+.*\s+[s|S]\d+\s+[e|E]\d+.*$',
+                        MessageHandler(Filters.regex(r'^\s*[s|S|series|Series]\s+.*\s+[s|S]\d+\s+[e|E]\d+.*$'),
                                      series_choice,
                                      pass_user_data=True),
-                        RegexHandler('^\s*[l|L|list|List].*$',
+                        MessageHandler(Filters.regex(r'^\s*[l|L|list|List].*$'),
                                      list_choice,
                                      pass_user_data=True),
                         ],
         },
 
-        fallbacks=[RegexHandler('^Done$', done, pass_user_data=True)]
+        fallbacks=[MessageHandler(Filters.regex(r'^Done$'), done, pass_user_data=True)],
+        name="my_conversation",
     )
 
     dp.add_handler(conv_handler)
 
     # log all errors
     dp.add_error_handler(error)
-
     # Start the Bot
     updater.start_polling()
 
