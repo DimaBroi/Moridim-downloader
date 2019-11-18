@@ -1,6 +1,6 @@
 
 class Globals:
-    moridim_main = "https://www.moridim.biz"
+    moridim_main = "http://moridim.club"
     moridim_rss = moridim_main + "/rss"
     log_filename = "mDownloader.log"
 

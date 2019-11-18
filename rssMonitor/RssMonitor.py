@@ -1,11 +1,11 @@
-import re
 import urllib
+import re
 
 import feedparser
 from bs4 import BeautifulSoup
 
 from downloadMgr import downloadMgr
-from globals import Conf_ini, Wish_json
+from globals import Conf_ini, Wish_json, Globals
 import logging
 from functools import reduce
 from utilities import encodeUrl
@@ -36,6 +36,7 @@ class RssMonitor:
                                 current['title'].split('|')[1].strip()):
                                     return output
                 output[found_reg[0]] = encodeUrl(current['links'][1]['href'])
+                logging.info("found :" + str(output))
             return output
 
         found = reduce(look_for_wanted, updates['entries'], {})
@@ -46,13 +47,13 @@ class RssMonitor:
 
         # at this point found holds a dictionary/map of name to link string  , the movie/series page at moridim
         def get_bs_object(page_link):
+            page_link = re.sub(r'^http:.*\.(.*?)(?=\/)', Globals.moridim_main,page_link)
             req = urllib.request.Request(page_link, headers={'User-Agent': 'Mozilla/5.0'})
             movie_page = urllib.request.urlopen(req).read()
             bs_obj = BeautifulSoup(movie_page, "html.parser")
             return bs_obj
 
         found = {k: get_bs_object(v) for k, v in found.items()}
-
         # at this point found holds a dictionary/map of name bto of the moridim page
         def get_download_link(page_bs_obj, name):
             if Wish_json.wishJsonMgr.getType(name) == Wish_json.Keys.series:
